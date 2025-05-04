@@ -1,8 +1,10 @@
 stage('Build llama.cpp') {
     steps {
         sh '''
-            # give git describe enough history
-            git -C "$LLAMA_DIR" fetch --unshallow --tags
+            # make sure at least one tag exists so git describe works
+            git -C "$LLAMA_DIR" tag v0 || true            # cheap local tag
+            # or, if upstream has tags, fetch them:
+            # git -C "$LLAMA_DIR" fetch --tags
 
             mkdir -p "$LLAMA_DIR/build"
             cd "$LLAMA_DIR/build"
