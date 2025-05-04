@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+    environment {
+        LLAMA_DIR = "${WORKSPACE}/llama.cpp"
+        MODEL_DIR = "${WORKSPACE}/models"
+        MODEL_FILE = "Meta-Llama-3-3B-Instruct.Q4_K_M.gguf"
+        MODEL_SOURCE_PATH = "/path/to/your/model/Meta-Llama-3-3B-Instruct.Q4_K_M.gguf" // <-- CHANGE THIS
+    }
+    stages {
+        stage('Clone llama.cpp') {
+            steps {
+                sh '''
+                    if [ ! -d "$LLAMA_DIR" ]; then
+                        echo "Cloning llama.cpp..."
+                        git clone https://github.com/ggml-org/llama.cpp "$LLAMA_DIR"
+                    fi
+                '''
+            }
+        }
+        stage('Build llama.cpp with CMake') {
+            steps {
+                sh '''
+                    mkdir -p "$LLAMA_DIR/build"
+                    cd "$LLAMA_DIR/build"
+                    cmake ..
+                    cmake --build . --config Release
+                '''
+            }
+        }
+        stage('Copy Model') {
+            steps {
+                sh '''
+                    mkdir -p "$MODEL_DIR"
+                    if [ ! -f "$MODEL_DIR/$MODEL_FILE" ]; then
+                        echo "Copying model file..."
+                        cp "$MODEL_SOURCE_PATH" "$MODEL_DIR/"
+                    fi
+                '''
+            }
+        }
+        // Optional: Archive artifacts for deployment
+        stage('Archive Artifacts') {
+            steps {
+                archiveArtifacts artifacts: 'llama.cpp/build/server,models/**', fingerprint: true
+            }
+        }
+    }
+}
