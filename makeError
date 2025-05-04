@@ -1,0 +1,13 @@
+stage('Build llama.cpp') {
+    steps {
+        sh '''
+            # give git describe enough history
+            git -C "$LLAMA_DIR" fetch --unshallow --tags
+
+            mkdir -p "$LLAMA_DIR/build"
+            cd "$LLAMA_DIR/build"
+            cmake ..
+            cmake --build . --config Release -- -j$(nproc)
+        '''
+    }
+}
