@@ -1,0 +1,32 @@
+#!/bin/bash
+
+set -e
+
+# Variables
+LLAMA_DIR="$PWD/llama.cpp"
+MODEL_DIR="$PWD/models"
+MODEL_FILE="Meta-Llama-3-3B-Instruct.Q4_K_M.gguf"
+MODEL_SOURCE_PATH="/path/to/your/model/Meta-Llama-3-3B-Instruct.Q4_K_M.gguf"  # <-- CHANGE THIS
+
+# Stage 1: Clone llama.cpp
+if [ ! -d "$LLAMA_DIR" ]; then
+    echo "Cloning llama.cpp..."
+    git clone https://github.com/ggml-org/llama.cpp "$LLAMA_DIR"
+fi
+
+# Stage 2: Build llama.cpp
+echo "Building llama.cpp..."
+cd "$LLAMA_DIR"
+make
+cd "$OLDPWD"
+
+# Stage 3: Copy Model
+mkdir -p "$MODEL_DIR"
+if [ ! -f "$MODEL_DIR/$MODEL_FILE" ]; then
+    echo "Copying model file..."
+    cp "$MODEL_SOURCE_PATH" "$MODEL_DIR/"
+fi
+
+# Optional: Start the server (uncomment if needed)
+# echo "Starting llama.cpp server..."
+# "$LLAMA_DIR/server" -m "$MODEL_DIR/$MODEL_FILE" --port 8080
