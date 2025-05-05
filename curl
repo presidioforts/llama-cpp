@@ -1,0 +1,3 @@
+curl -X POST http://localhost:8000/convert \
+     -H "Content-Type: application/json" \
+     -d '{"html":"<h2>Title</h2><p><strong>bold</strong></p>"}'
