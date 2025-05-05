@@ -5,3 +5,10 @@ OPENAI_API_KEY=sk-notused
 MAX_TOKENS=256
 TEMPERATURE=0.7
 TOP_P=0.95
+
+
+
+pip install streamlit openai python-dotenv
+
+
+Create a .env next to streamlit_app.py:
