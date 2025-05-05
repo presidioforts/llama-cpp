@@ -1,0 +1,7 @@
+OPENAI_API_BASE=http://localhost:8000/chat
+OPENAI_MODEL=llama3-finetune
+# OPENAI_API_KEY is required by the SDK but ignored by your service
+OPENAI_API_KEY=sk-notused
+MAX_TOKENS=256
+TEMPERATURE=0.7
+TOP_P=0.95
